@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="hu">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Levi MineSweeper</title>
+    <script src="./script.js"></script>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <h1>MineSweeper</h1>
+
+    <!-- 
+        Aknák száma méretenként: 
+        10x10: 10db akna
+        18x18: 40 db akna
+        24x24: 99 db akna
+
+        -->
+
+    <div class="GameSpace">
+      <div class="GameData">
+        <h2>Aknák száma</h2>
+        <label>10 db akna</label
+        ><input type="radio" id="MineNumber" value="10" name="MineNumber" />
+        <br />
+        <label>20 db akna</label
+        ><input type="radio" id="MineNumber" value="20" name="MineNumber" />
+        <br />
+        <label>99 db akna</label
+        ><input type="radio" id="MineNumber" value="99" name="MineNumber" />
+      </div>
+      <button onclick="StartGame()">Start</button>
+      <div class="GameTable" id="GameTable"></div>
+    </div>
+  </body>
+</html>
