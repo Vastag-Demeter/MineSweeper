@@ -1,0 +1,13 @@
+.GameTable {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.GameTableButton {
+  width: 30px;
+  height: 30px;
+}
+
+.Correct {
+  transition: 0.3s;
+}
