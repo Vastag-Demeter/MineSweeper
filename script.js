@@ -1,6 +1,7 @@
 var checked;
 var mines;
-
+var block;
+var NumOfButtons;
 function StartGame() {
   let MineDiv = document.getElementsByName("MineNumber");
   let numOfMines = 0;
@@ -14,7 +15,7 @@ function StartGame() {
     let gameSpace = document.getElementById("GameTable");
     gameSpace.innerHTML = "";
 
-    let block;
+    block;
     let chance;
     switch (numOfMines) {
       case "10":
@@ -49,7 +50,7 @@ function StartGame() {
       }
     }
 
-    let NumOfButtons = block * block;
+    NumOfButtons = block * block;
     MinePos = MinePos.sort(function (a, b) {
       return a - b;
     });
@@ -76,9 +77,12 @@ function StartGame() {
 
         posIndex++;
       }
-
+      generatedDiv.addEventListener("auxclick", function () {
+        PosMine(generatedDiv.id);
+      });
       gameSpace.appendChild(generatedDiv);
     }
+
     let size = 30 * block;
     gameSpace.style.height = size + "px";
     gameSpace.style.width = size + "px";
@@ -148,13 +152,39 @@ function getMinesAround(id, block, lastBlock, MineNumber) {
           mines++;
         }
       }
+      if (mines == 0) {
+        chosenButtonIsZero(id, CheckPos);
+        idBlock.innerHTML = "";
+        idBlock.disabled = true;
+      } else {
+        idBlock.innerHTML = mines;
+      }
 
-      idBlock.innerHTML = mines;
       checked++;
 
       if (checked == lastBlock - MineNumber) {
         alert("Nyertél");
       }
     }
+  }
+}
+
+function PosMine(id) {
+  let chosenButton = document.getElementById(id);
+  if (!chosenButton.classList.contains("Correct")) {
+    if (chosenButton.disabled == true) {
+      chosenButton.disabled = false;
+      chosenButton.innerHTML = "";
+    } else {
+      chosenButton.innerHTML = "B";
+      chosenButton.disabled = true;
+    }
+  }
+}
+
+function chosenButtonIsZero(id, CheckPos) {
+  for (let i = 0; i < CheckPos.length; i++) {
+    paramId = id + CheckPos[i];
+    getMinesAround(paramId, block, NumOfButtons, mines);
   }
 }
