@@ -11,6 +11,8 @@ var NumOfButtons;
 var MinePos = [];
 
 function StartGame() {
+  let startButton = document.getElementById("startButton");
+  startButton.classList.remove("gameOver");
   let MineDiv = document.getElementsByName("MineNumber");
   //Az aknák száma
   let numOfMines = 0;
@@ -86,6 +88,7 @@ function StartGame() {
         PosMine(generatedDiv.id);
       });
       gameSpace.appendChild(generatedDiv);
+      playSound("start");
     }
 
     //A mezők méretének beállítása
@@ -148,7 +151,9 @@ function getMinesAround(id, block, numOfButtons, MineNumber) {
       //akkor a felhasználó nyert
 
       if (checked == numOfButtons - MineNumber) {
-        alert("Nyertél");
+        let startButton = document.getElementById("startButton");
+        startButton.classList.remove("gameOver");
+        playSound("win");
       }
     }
   }
@@ -159,14 +164,18 @@ function getMinesAround(id, block, numOfButtons, MineNumber) {
   és annak visszafordítása
 */
 function PosMine(id) {
-  let chosenButton = document.getElementById(id);
-  if (!chosenButton.classList.contains("Correct")) {
-    if (chosenButton.disabled == true) {
-      chosenButton.disabled = false;
-      chosenButton.innerHTML = "";
-    } else {
-      chosenButton.innerHTML = "B";
-      chosenButton.disabled = true;
+  let startButton = document.getElementById("startButton");
+  if (!startButton.classList.contains("gameOver")) {
+    let chosenButton = document.getElementById(id);
+    if (!chosenButton.classList.contains("Correct")) {
+      if (chosenButton.disabled == true) {
+        chosenButton.disabled = false;
+        chosenButton.innerHTML = "";
+      } else {
+        chosenButton.innerHTML = "B";
+        chosenButton.disabled = true;
+      }
+      playSound("mine");
     }
   }
 }
@@ -255,7 +264,6 @@ function getPositions(block, id) {
     //Ha az utolsó sor első mezője
   } else if (id == NumOfButtons - block + 1) {
     CheckPos.splice(3, 2);
-    console.log("Sarok");
 
     //Ha az utolsó sorban van
   } else if (id > NumOfButtons - block) {
@@ -278,8 +286,11 @@ function gameOVer(minePositions, numberOfButtons) {
     }
   }
   playSound("gameOver");
+  let startButton = document.getElementById("startButton");
+  startButton.classList.add("gameOver");
 }
 
+//Lejátsza a megadott hangot
 function playSound(input) {
   var audio = new Audio("Sound/" + input + ".mp3");
   audio.play();
