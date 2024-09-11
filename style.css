@@ -11,3 +11,7 @@
 .Correct {
   transition: 0.3s;
 }
+
+.ShowMines {
+  background-color: red;
+}

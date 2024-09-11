@@ -7,6 +7,8 @@ var mines;
 var block;
 //A gombok száma a játéktéren
 var NumOfButtons;
+//Az aknák pozíciói
+var MinePos = [];
 
 function StartGame() {
   let MineDiv = document.getElementsByName("MineNumber");
@@ -25,9 +27,6 @@ function StartGame() {
 
     //Beállítom az aknák és a block számát
     getNumberOfMines(numOfMines);
-    
-    //Ebbe mentem el az aknák pozícióját
-    let MinePos = [];
 
     //A mezők száma a játéktéren
     NumOfButtons = block * block;
@@ -81,8 +80,8 @@ function StartGame() {
         generatedDiv.classList.add("Mine");
         posIndex++;
       }
-        //Ha jobb egérgombbal vagy görgővel kattintunk a mezőre,
-        //akkor aknának jelöli
+      //Ha jobb egérgombbal vagy görgővel kattintunk a mezőre,
+      //akkor aknának jelöli
       generatedDiv.addEventListener("auxclick", function () {
         PosMine(generatedDiv.id);
       });
@@ -109,21 +108,17 @@ function getMinesAround(id, block, numOfButtons, MineNumber) {
   //Ha a mező akna, akkor vége a játéknak,
   //egyébként vizsgálom
   if (idBlock.classList.contains("Mine")) {
-    alert("Bombára kattintottál!");
-    let table = document.getElementById("GameTable");
-    table.innerHTML = "";
+    // Game Over
+    gameOVer(MinePos, numOfButtons);
   } else {
     if (!idBlock.classList.contains("Correct")) {
       idBlock.classList.add("Correct");
-
+      playSound("click");
       //A vizsgálandó pozíciók, az adott pozícióhoz viszonyítva
-      let CheckPos = getPositions(block,id);
+      let CheckPos = getPositions(block, id);
 
       //Megkapom az aknák számát, majd megjelenítem azokat
       mines = 0;
-
-      //Megjelenítem a pozíciókat
-      console.log(CheckPos);
 
       //Ellenőrzöm, hogy a kapott pozíciók aknák-e,
       //ha igen, akkor növelem a "mines" értékét
@@ -151,6 +146,7 @@ function getMinesAround(id, block, numOfButtons, MineNumber) {
 
       //Ha a "checked" elérte a  nem-akna típusú mezők számát,
       //akkor a felhasználó nyert
+
       if (checked == numOfButtons - MineNumber) {
         alert("Nyertél");
       }
@@ -175,7 +171,7 @@ function PosMine(id) {
   }
 }
 
-//A kiválaszott mező körül 0 akna van, 
+//A kiválaszott mező körül 0 akna van,
 //ezért végignézem a körülötte lévő
 //pozíciókat, hogy azok körül mennyi akna van
 function chosenButtonIsZero(id, CheckPos) {
@@ -185,9 +181,9 @@ function chosenButtonIsZero(id, CheckPos) {
   }
 }
 
-//A block, valamint az aknák meghatározása 
+//A block, valamint az aknák meghatározása
 //a kiválasztott aknák száma alapján
-function getNumberOfMines(numOfMines){
+function getNumberOfMines(numOfMines) {
   switch (numOfMines) {
     case "10":
       block = 10;
@@ -204,11 +200,10 @@ function getNumberOfMines(numOfMines){
   }
 }
 
-
-//Meghatározom, hogy adott mezőhőz képest, 
+//Meghatározom, hogy adott mezőhőz képest,
 //milyen távolságra lévő mezőket vizsgáljon a játék
-function getPositions(block,id){
-  //Kiválasztom a lehető összes lehetőséget 
+function getPositions(block, id) {
+  //Kiválasztom a lehető összes lehetőséget
   let CheckPos = [];
   switch (block) {
     case 10:
@@ -251,11 +246,9 @@ function getPositions(block,id){
     CheckPos.splice(0, 1);
     CheckPos.splice(2, 1);
     CheckPos.splice(3, 1);
-
-  
   }
 
-    //Ha az utolsó mező
+  //Ha az utolsó mező
   if (id == NumOfButtons) {
     CheckPos.splice(3, 2);
 
@@ -270,4 +263,24 @@ function getPositions(block,id){
   }
 
   return CheckPos;
+}
+
+function gameOVer(minePositions, numberOfButtons) {
+  for (let i = 0; i <= numberOfButtons; i++) {
+    let button = document.getElementById(i);
+
+    if (minePositions.includes(i)) {
+      button.classList.add("ShowMines");
+    }
+
+    if (button != null) {
+      button.disabled = true;
+    }
+  }
+  playSound("gameOver");
+}
+
+function playSound(input) {
+  var audio = new Audio("Sound/" + input + ".mp3");
+  audio.play();
 }
