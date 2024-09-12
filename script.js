@@ -292,6 +292,16 @@ function gameOVer(minePositions, numberOfButtons) {
 
 //Lejátsza a megadott hangot
 function playSound(input) {
-  var audio = new Audio("Sound/" + input + ".mp3");
+
+  var audio = new Audio();
+  // Hangerő, de nem mindig mindig működik
+  audio.volume = 0.2;
+
+  audio.src = "Sound/" + input + ".mp3"
+  
+  
   audio.play();
+ 
+  
+
 }
