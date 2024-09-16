@@ -1,7 +1,9 @@
 import * as script from "./functions.js";
 
+//Ebben tárolom az aknák pozítióit
 var MinePos = [];
 
+//Event listener -> Ha a start-ra kattint a felhasználó, akkor elindul a játék
 document.querySelector("#startButton").addEventListener("click", StartGame);
 
 function StartGame() {
@@ -61,18 +63,6 @@ function StartGame() {
       let generatedDiv = document.createElement("button");
       generatedDiv.classList.add("GameTableButton");
       generatedDiv.id = i;
-      // generatedDiv.setAttribute(
-      //   "onclick",
-      //   "getMinesAround(" +
-      //     generatedDiv.id +
-      //     "," +
-      //     block +
-      //     "," +
-      //     NumOfButtons +
-      //     "," +
-      //     mines +
-      //     ")"
-      // );
 
       generatedDiv.addEventListener("click", () =>
         script.getMinesAround(
@@ -104,97 +94,4 @@ function StartGame() {
     gameSpace.style.width = size + "px";
     let checked = 0;
   }
-}
-
-//Meghatározom, hogy adott mezőhőz képest,
-//milyen távolságra lévő mezőket vizsgáljon a játék
-
-function getPositions(block, id) {
-  //Kiválasztom a lehető összes lehetőséget
-  let CheckPos = [];
-  switch (block) {
-    case 10:
-      CheckPos = [-11, -10, -9, -1, 1, 9, 10, 11];
-      break;
-    case 18:
-      CheckPos = [-19, -18, -17, -1, 1, 17, 18, 19];
-      break;
-    case 24:
-      CheckPos = [-25, -24, -23, -1, 1, 23, 24, 25];
-      break;
-  }
-
-  //Kiszűrom azokat a mezőket, amelyeket nem kell,
-  //vagy nem lehet vizsgálni
-
-  //Ha ez első mező
-  if (id == 1) {
-    CheckPos.splice(0, 4);
-    CheckPos.splice(1, 1);
-
-    //Ha az első sor utólsó mezője
-  } else if (id == block) {
-    CheckPos.splice(0, 3);
-    CheckPos.splice(1, 1);
-    CheckPos.splice(3, 1);
-
-    //Ha az első sorban van
-  } else if (id < block) {
-    CheckPos.splice(0, 3);
-
-    //Ha a jobb szélső oszlopban van
-  } else if (id % block == 0) {
-    CheckPos.splice(2, 1);
-    CheckPos.splice(3, 1);
-    CheckPos.splice(5, 1);
-
-    //Ha a bal szélső oszlopban van
-  } else if (id % block == 1) {
-    CheckPos.splice(0, 1);
-    CheckPos.splice(2, 1);
-    CheckPos.splice(3, 1);
-  }
-
-  //Ha az utolsó mező
-  if (id == NumOfButtons) {
-    CheckPos.splice(3, 2);
-
-    //Ha az utolsó sor első mezője
-  } else if (id == NumOfButtons - block + 1) {
-    CheckPos.splice(3, 2);
-
-    //Ha az utolsó sorban van
-  } else if (id > NumOfButtons - block) {
-    CheckPos.splice(5, 3);
-  }
-
-  return CheckPos;
-}
-
-function gameOVer(minePositions, numberOfButtons) {
-  for (let i = 0; i <= numberOfButtons; i++) {
-    let button = document.getElementById(i);
-
-    if (minePositions.includes(i)) {
-      button.classList.add("ShowMines");
-    }
-
-    if (button != null) {
-      button.disabled = true;
-    }
-  }
-  playSound("gameOver");
-  let startButton = document.getElementById("startButton");
-  startButton.classList.add("gameOver");
-}
-
-//Lejátsza a megadott hangot
-function playSound(input) {
-  var audio = new Audio();
-  // Hangerő, de nem mindig mindig működik
-  audio.volume = 0.2;
-
-  audio.src = "Sound/" + input + ".mp3";
-
-  audio.play();
 }
